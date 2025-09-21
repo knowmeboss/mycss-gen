@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MYCSS - Gradient Generator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .glow:hover {
+      box-shadow: 0 0 20px rgba(255,255,255,0.7);
+      transform: scale(1.05);
+      transition: all 0.3s ease;
+    }
+  </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col">
+
+
+  <!-- Navbar -->
+  <nav class="flex justify-between items-center px-6 py-4 bg-gray-800 shadow-md sticky top-0 z-50">
+    <h1 class="text-2xl font-bold text-green-400 glow">MYCSS</h1>
+    <div class="space-x-4">
+      <a href="#" class="hover:text-green-400 glow">GitHub</a>
+      <a href="#" class="hover:text-green-400 glow">LinkedIn</a>
+      <a href="#" class="hover:text-green-400 glow">YouTube</a>
+      <a href="#" class="hover:text-green-400 glow">Instagram</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="text-center py-10">
+    <h2 class="text-3xl font-bold mb-6">Gradient Generator</h2>
+
+    <!-- Adsense placeholder in Hero -->
+    <div class="w-full flex justify-center mb-6">
+      <div class="bg-gray-800 text-gray-400 px-6 py-3 rounded-lg w-3/4">[Adsense Ad Placeholder - Hero]</div>
+    </div>
+
+    <div class="flex justify-center gap-4 mb-6 flex-wrap">
+      <input id="gradientCount" type="number" min="1" max="50" value="12"
+             class="px-3 py-2 rounded bg-gray-800 border border-gray-600 focus:outline-none focus:border-green-400" />
+      <select id="gradientType" class="px-3 py-2 rounded bg-gray-800 border border-gray-600 focus:outline-none focus:border-green-400">
+        <option value="linear">Linear</option>
+        <option value="radial">Radial</option>
+      </select>
+      <button onclick="generateGradients()" class="bg-green-500 hover:bg-green-600 text-black font-semibold px-4 py-2 rounded glow">Generate</button>
+    </div>
+  </section>
+
+  <!-- Gradient Boxes -->
+  <section id="gradientContainer" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-6 pb-10">
+    <!-- Gradients will be injected here -->
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-center py-4 mt-auto">
+    <p class="text-gray-400">Created by Karab</p>
+  </footer>
+
+  <script>
+    function randomColor() {
+      return `#${Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0')}`;
+    }
+
+    function generateGradients() {
+      const count = Math.min(50, Math.max(1, document.getElementById('gradientCount').value));
+      const type = document.getElementById('gradientType').value;
+      const container = document.getElementById('gradientContainer');
+      container.innerHTML = '';
+
+      for (let i = 0; i < count; i++) {
+        const color1 = randomColor();
+        const color2 = randomColor();
+        const gradient = type === 'linear'
+          ? `linear-gradient(45deg, ${color1}, ${color2})`
+          : `radial-gradient(circle, ${color1}, ${color2})`;
+
+        const box = document.createElement('div');
+        box.className = 'rounded-xl overflow-hidden shadow-lg bg-gray-800 glow';
+
+        const preview = document.createElement('div');
+        preview.className = 'h-32 w-full';
+        preview.style.backgroundImage = gradient;
+
+        const actions = document.createElement('div');
+        actions.className = 'p-3 bg-gray-900 flex justify-between';
+        actions.innerHTML = `
+          <button onclick="copyCode('tailwind', '${gradient}')" class="bg-green-500 hover:bg-green-600 text-black px-2 py-1 rounded text-xs">Tailwind</button>
+          <button onclick="copyCode('css', '${gradient}')" class="bg-blue-500 hover:bg-blue-600 text-black px-2 py-1 rounded text-xs">CSS</button>
+        `;
+
+        box.appendChild(preview);
+        box.appendChild(actions);
+
+        container.appendChild(box);
+      }
+    }
+
+    function copyCode(type, gradient) {
+      let code = '';
+      if (type === 'tailwind') {
+        code = `bg-[${gradient}]`;
+      } else {
+        code = `background: ${gradient};`;
+      }
+      navigator.clipboard.writeText(code);
+      alert(type.toUpperCase() + ' code copied!');
+    }
+
+    // Generate default gradients on load
+    window.onload = generateGradients;
+  </script>
+
+</body>
+</html>
